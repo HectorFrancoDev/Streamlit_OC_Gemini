@@ -7,7 +7,7 @@ from gemini_model import gemini_output_TR, model
 st.title('Reto OCR Asobancaria... ')
 
 # Descripción
-st.write('¡Bienvenido a mi primera aplicación con Streamlit!')
+st.write('Equipo Banco Davivienda - Reto OCR Auditores Asobancaria')
 
 # Haz el prompt en español
 prompt = st.text_input('Construye tu Prompt')
