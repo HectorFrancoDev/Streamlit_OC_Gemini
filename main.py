@@ -15,7 +15,7 @@ prompt = st.text_input('Construye tu Prompt')
 # Carga de un documento
 documento = st.file_uploader('Cargar un archivo| PDF', type=['pdf'])
 
-if documento is not None:
+if len(prompt) > 10 and documento is not None:
     archivo_pdf = documento.read()
     
     pdf_name = documento.name
