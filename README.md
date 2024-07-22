@@ -21,3 +21,15 @@ source ./venv/bin/activate
 ```bash
 pip install -r requirements.txt
 ```
+## 3. Crear archivo .env
+Crear el archivo .env en la ruta ráiz del proyecto
+
+## 4. Asignar la variable de entorno de Gemini
+Crear una variable de entorno con el API key de Gemini
+```js
+GEMINI_API_KEY=TU_API_KEY
+```
+## 5. Correr la aplicación
+```bash
+streamlit run main.py
+```
