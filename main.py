@@ -4,6 +4,8 @@ from convert_pdf_to_img import pdf_to_images
 from gemini_model import gemini_output_TR, model
 
 # Título de la aplicación
+# st.logo('logo-davivienda.png', link="https://daviviendateam.streamlit.app", icon_image='logo-davivienda.png')
+st.image('logo-davivienda.png', caption='Banco Davivienda')
 st.title('Reto OCR Asobancaria... ')
 
 # Descripción
@@ -13,7 +15,7 @@ st.write('Equipo Banco Davivienda - Reto OCR Auditores Asobancaria')
 prompt = st.text_input('Construye tu Prompt')
 
 # Carga de un documento
-documento = st.file_uploader('Cargar un archivo| PDF', type=['pdf'])
+documento = st.file_uploader('Cargar un archivo', type=['pdf'])
 
 if len(prompt) > 10 and documento is not None:
     archivo_pdf = documento.read()
