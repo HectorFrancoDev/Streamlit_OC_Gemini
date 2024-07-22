@@ -13,7 +13,7 @@ st.write('Equipo Banco Davivienda - Reto OCR Auditores Asobancaria')
 prompt = st.text_input('Construye tu Prompt')
 
 # Carga de un documento
-documento = st.file_uploader('Cargar un PDF', type=['pdf'])
+documento = st.file_uploader('Cargar un archivo| PDF', type=['pdf'])
 
 if documento is not None:
     archivo_pdf = documento.read()
@@ -27,7 +27,7 @@ if documento is not None:
     
     english_prompt = gemini_output_TR(prompt)
     
-    model(english_prompt)
+    st.write(model(english_prompt))
     
     
     

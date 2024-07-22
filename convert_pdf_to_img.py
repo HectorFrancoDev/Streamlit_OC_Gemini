@@ -28,5 +28,4 @@ def pdf_to_images(pdf_path, output_base_folder, image_format = 'png'):
     for i, image in enumerate(images):
         image_filename = os.path.join(output_folder, f'page_{i + 1}.{image_format}')
         image.save(image_filename, image_format.upper())
-        print(f'Guardado {image_filename}')
         

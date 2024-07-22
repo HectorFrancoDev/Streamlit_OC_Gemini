@@ -123,6 +123,7 @@ def gemini_output_OCR(image_path, user_prompt):
 
 def model(prompt):
 
+  data_list = []
   # Recorrer
   for nombre_carpeta, _, archivos in os.walk('output_images'):
       for archivo in archivos:
@@ -130,6 +131,9 @@ def model(prompt):
           if archivo.endswith((".jpg", ".jpeg", ".png")):  # Cambiar extensiones según sea necesario
               ruta_imagen = os.path.join(nombre_carpeta, archivo)
               data = gemini_output_OCR(ruta_imagen, prompt)
-              print(f'{ruta_imagen} == {data}')
+              data_list.append(data)
+            #   print(f'{ruta_imagen} == {data}')
           else:
-              pass 
+              pass
+  
+  return data_list
