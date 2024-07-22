@@ -4,7 +4,7 @@ from convert_pdf_to_img import pdf_to_images
 from gemini_model import gemini_output_TR, model
 
 # Título de la aplicación
-st.title('Reto OCR Asobancaria ')
+st.title('Reto OCR Asobancaria... ')
 
 # Descripción
 st.write('¡Bienvenido a mi primera aplicación con Streamlit!')
