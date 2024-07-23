@@ -2,9 +2,7 @@ import streamlit as st
 from PyPDF2 import PdfReader
 from convert_pdf_to_img import pdf_to_images
 from gemini_model import gemini_output_TR, model
-from paligemma_model import start
 
-start()
 
 # Título de la aplicación
 # st.logo('logo-davivienda.png', link="https://daviviendateam.streamlit.app", icon_image='logo-davivienda.png')
