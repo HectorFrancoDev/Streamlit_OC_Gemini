@@ -10,25 +10,18 @@ import torch
 HUGGING_FACE_API_KEY = os.getenv('HUGGING_FACE_API_KEY')
 login(token=HUGGING_FACE_API_KEY)
 
+model_id = "google/paligemma-3b-mix-224"
+model = PaliGemmaForConditionalGeneration.from_pretrained(model_id).eval()
+processor = AutoProcessor.from_pretrained(model_id)
+
+
 def start():
+    prompt = "What is on the flower?"
+    image_file = "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/bee.jpg?download=true"
+    raw_image = Image.open(requests.get(image_file, stream=True).raw)
+    inputs = processor(prompt, raw_image, return_tensors="pt")
+    output = model.generate(**inputs, max_new_tokens=20)
 
-    model_id = "google/paligemma-3b-mix-224"
-
-    url = "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/transformers/tasks/car.jpg?download=true"
-    image = Image.open(requests.get(url, stream=True).raw)
-
-    model = PaliGemmaForConditionalGeneration.from_pretrained(model_id).eval()
-    processor = AutoProcessor.from_pretrained(model_id)
-
-    # Instruct the model to create a caption in Spanish
-    prompt = "caption es"
-    model_inputs = processor(text=prompt, images=image, return_tensors="pt")
-    input_len = model_inputs["input_ids"].shape[-1]
-
-    with torch.inference_mode():
-        generation = model.generate(**model_inputs, max_new_tokens=100, do_sample=False)
-        generation = generation[0][input_len:]
-        decoded = processor.decode(generation, skip_special_tokens=True)
-        print(decoded)
+    print(processor.decode(output[0], skip_special_tokens=True)[len(prompt):])
 
 

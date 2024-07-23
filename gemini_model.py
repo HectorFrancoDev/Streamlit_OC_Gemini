@@ -3,9 +3,6 @@ import os
 
 from dotenv import load_dotenv
 
-# Importar JSON para representar la data en ese formato
-import json
-
 # Importa la clase time
 import time
 
