@@ -129,6 +129,6 @@ def model(prompt):
           if archivo.endswith((".jpg", ".jpeg", ".png")):  # Cambiar extensiones según sea necesario
               ruta_imagen = os.path.join(nombre_carpeta, archivo)
               data = gemini_output_OCR(ruta_imagen, prompt)
-              data_list.append(translator.translate(data, src='en', dest='es'))
+              data_list.append(data)
   
   return data_list

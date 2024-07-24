@@ -7,25 +7,36 @@ import torch
 from datetime import datetime
 from transformers import AutoProcessor, PaliGemmaForConditionalGeneration
 import pandas as pd
+import requests
 from tqdm import tqdm
 from huggingface_hub import login
 
 load_dotenv()  # take environment variables from .env.
 HUGGING_FACE_API_KEY = os.getenv('HUGGING_FACE_API_KEY')
 login(token=HUGGING_FACE_API_KEY)
-# Inicializar el modelo y procesador
+
+
+# # Inicializar el modelo y procesador
+# model_id = "google/paligemma-3b-mix-224"
+# dtype = torch.bfloat16
+# # Define si usar CUDA o CPU
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# # Inicializar el modelo y procesador
+# model = PaliGemmaForConditionalGeneration.from_pretrained(
+#     model_id,
+#     torch_dtype=dtype,
+#     device_map=device,
+#     revision="bfloat16",
+# ).eval()
+# processor = AutoProcessor.from_pretrained(model_id)
+
 model_id = "google/paligemma-3b-mix-224"
-dtype = torch.bfloat16
-# Define si usar CUDA o CPU
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# Inicializar el modelo y procesador
-model = PaliGemmaForConditionalGeneration.from_pretrained(
-    model_id,
-    torch_dtype=dtype,
-    device_map=device,
-    revision="bfloat16",
-).eval()
+model = PaliGemmaForConditionalGeneration.from_pretrained(model_id).eval()
 processor = AutoProcessor.from_pretrained(model_id)
+
+
+
+
 
 
 def extract_and_convert_pages_with_keyword(pdf_path, keyword):
@@ -112,19 +123,40 @@ def process_data(pdf_path, keyword, prompt ):
 
 def prueba():
     results = []
-    print('Otra mondá')
     
-    route_file='/workspaces/Streamlit_OC_Gemini/Pages_with_7282_20240724_031339/page_7.jpg'
+    route_file='Pages_with_7282_20240724_040119/page_7.jpg'
     prompt = 'Extract Dates'
 
     raw_image = Image.open(route_file)
 
-    inputs = processor(prompt, raw_image, return_tensors="pt")
-    output = model.generate(**inputs, max_new_tokens=20)
-    result = processor.decode(output[0], skip_special_tokens=True)[len(prompt):]
+    # inputs = processor(prompt, raw_image, return_tensors="pt").to(model.device)
+    # print(inputs)
 
-    # Agregar el resultado a la lista
-    results.append({"file": route_file, "Resultado": result})
-    print(f'{route_file} == {result}\n')
+    # output = model.generate(**inputs, max_new_tokens=20)
+    # print(output)
+
+    # result = processor.decode(output[0], skip_special_tokens=True)[len(prompt):]
+
+    # print(result)
+
+    # # Agregar el resultado a la lista
+    # results.append({"file": route_file, "Resultado": result})
+    # print(f'{route_file} == {result}\n')
+
+    url = "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/transformers/tasks/car.jpg?download=true"
+    image = Image.open(requests.get(url, stream=True).raw)
+    prompt = "caption es"
+    model_inputs = processor(text=prompt, images=image, return_tensors="pt").to(model.device)
+    input_len = model_inputs["input_ids"].shape[-1]
+
+    print('llegó')
+
+    with torch.inference_mode():
+        print('abre')
+        generation = model.generate(**model_inputs, max_new_tokens=100, do_sample=False)
+        print('cierra')
+        generation = generation[0][input_len:]
+        decoded = processor.decode(generation, skip_special_tokens=True)
+        print(decoded)
 
 

@@ -6,9 +6,9 @@ from PyPDF2 import PdfReader
 from convert_pdf_to_img import pdf_to_images
 from gemini_model import gemini_output_TR, model
 from googletrans import Translator
-from paligemma_model import process_data
+from paligemma_model import process_data, prueba
 
-# prueba()
+prueba()
 
 files_folder = 'files'
 output_folder = 'output_images'
@@ -82,11 +82,12 @@ if seleccion == 'Modelo SLM':
         gc.collect()
 
 
-if seleccion == 'Model LLM':
+if seleccion == 'Modelo LLM':
 
     if len(prompt) > 10 and documento is not None:
         archivo_pdf = documento.read()
-        os.mkdir(files_folder)
+        if not os.path.exists(files_folder):
+            os.makedirs(files_folder)
         
         pdf_name = documento.name
         # Guardar el archivo PDF en el sistema de archivos local (opcional)
@@ -95,10 +96,10 @@ if seleccion == 'Model LLM':
             
         pdf_to_images(f'files/{pdf_name}', output_folder, 'png')
         
-        # english_prompt = gemini_output_TR(prompt)
+        english_prompt = gemini_output_TR(prompt)
 
         # Traducir el texto al español
-        english_prompt = translator.translate(prompt, src='es', dest='en')
+        #english_prompt = translator.translate(prompt, src='es', dest='en')
         
         st.write(model(english_prompt))
         shutil.rmtree(files_folder)
