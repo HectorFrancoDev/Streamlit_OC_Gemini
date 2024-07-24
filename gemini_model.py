@@ -14,7 +14,8 @@ import google.generativeai as genai
 from pathlib import Path
 import mimetypes
 
-import time
+from googletrans import Translator
+translator = Translator()
 
 
 load_dotenv()  # take environment variables from .env.
@@ -124,13 +125,10 @@ def model(prompt):
   # Recorrer
   for nombre_carpeta, _, archivos in os.walk('output_images'):
       for archivo in archivos:
-          time.sleep(0.5)
+          #time.sleep(0.5)
           if archivo.endswith((".jpg", ".jpeg", ".png")):  # Cambiar extensiones según sea necesario
               ruta_imagen = os.path.join(nombre_carpeta, archivo)
               data = gemini_output_OCR(ruta_imagen, prompt)
-              data_list.append(data)
-            #   print(f'{ruta_imagen} == {data}')
-          else:
-              pass
+              data_list.append(translator.translate(data, src='en', dest='es'))
   
   return data_list
