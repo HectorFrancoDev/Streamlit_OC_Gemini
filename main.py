@@ -6,9 +6,9 @@ from PyPDF2 import PdfReader
 from convert_pdf_to_img import pdf_to_images
 from gemini_model import gemini_output_TR, model
 from googletrans import Translator
-from paligemma_model import process_data, prueba
+from paligemma_model import process_data
 
-prueba()
+# prueba()
 
 files_folder = 'files'
 output_folder = 'output_images'
