@@ -6,9 +6,7 @@ from PyPDF2 import PdfReader
 from convert_pdf_to_img import pdf_to_images
 from gemini_model import gemini_output_TR, model
 from googletrans import Translator
-from paligemma_model import process_data, prueba
-
-prueba()
+# from paligemma_model import process_data, prueba 
 
 files_folder = 'files'
 output_folder = 'output_images'
@@ -45,10 +43,10 @@ La IA generativa analiza tus archivos y te proporciona la información que neces
 st.write(descripcion)
 
 # Opciones para el selectbox
-opciones = ["Modelo SLM", "Modelo LLM"]
+# opciones = ["Modelo SLM", "Modelo LLM"]
 
 # Crear el selectbox
-seleccion = st.selectbox("Selecciona una opción:", opciones)
+# seleccion = st.selectbox("Selecciona una opción:", opciones)
 
 # Haz el prompt en español
 prompt = st.text_input('Construye tu Prompt')
@@ -57,54 +55,59 @@ prompt = st.text_input('Construye tu Prompt')
 documento = st.file_uploader('Cargar un archivo', type=['pdf'])
 
 # Haz el prompt en español
-keyword = st.text_input('Busca tu palabra clave')
+# keyword = st.text_input('Busca tu palabra clave')
+if len(prompt) > 10 and documento is not None:
+    archivo_pdf = documento.read()
+    if not os.path.exists(files_folder):
+        os.makedirs(files_folder)
+    pdf_name = documento.name
+    # Guardar el archivo PDF en el sistema de archivos local (opcional)
+    with open(f'files/{pdf_name}', 'wb') as f:
+        f.write(archivo_pdf)
+    pdf_to_images(f'files/{pdf_name}', output_folder, 'png')
+    english_prompt = gemini_output_TR(prompt)
+    # Traducir el texto al español
+    #english_prompt = translator.translate(prompt, src='es', dest='en')
+    st.write(model(english_prompt))
+    shutil.rmtree(files_folder)
+    shutil.rmtree(output_folder)
+    gc.collect()
 
-if seleccion == 'Modelo SLM':
-    if len(prompt) > 5 and len(keyword) > 0 and documento is not None:
-        
-
-        # Traducir el prompt al inglés
-        # english_prompt = translator.translate(str(prompt), src='es', dest='en')
-
-        archivo_pdf = documento.read()
-        if not os.path.exists(files_folder):
-            os.makedirs(files_folder)
-        pdf_name = documento.name
-
-        # Guardar el archivo PDF en el sistema de archivos local (opcional)
-        with open(f'files/{pdf_name}', 'wb') as f:
-            f.write(archivo_pdf)
-
-        result_df = process_data(f'files/{pdf_name}', str(keyword), prompt)
-        st.dataframe(result_df)
-        shutil.rmtree(files_folder)
-        # shutil.rmtree(output_dir)
-        gc.collect()
+# if seleccion == 'Modelo SLM':
+#     if len(prompt) > 5 and len(keyword) > 0 and documento is not None:
+#         # Traducir el prompt al inglés
+#         # english_prompt = translator.translate(str(prompt), src='es', dest='en')
+#         archivo_pdf = documento.read()
+#         if not os.path.exists(files_folder):
+#             os.makedirs(files_folder)
+#         pdf_name = documento.name
+#         # Guardar el archivo PDF en el sistema de archivos local (opcional)
+#         with open(f'files/{pdf_name}', 'wb') as f:
+#             f.write(archivo_pdf)
+#         result_df = process_data(f'files/{pdf_name}', str(keyword), prompt)
+#         st.dataframe(result_df)
+#         shutil.rmtree(files_folder)
+#         # shutil.rmtree(output_dir)
+#         gc.collect()
 
 
-if seleccion == 'Modelo LLM':
-
-    if len(prompt) > 10 and documento is not None:
-        archivo_pdf = documento.read()
-        if not os.path.exists(files_folder):
-            os.makedirs(files_folder)
-        
-        pdf_name = documento.name
-        # Guardar el archivo PDF en el sistema de archivos local (opcional)
-        with open(f'files/{pdf_name}', 'wb') as f:
-            f.write(archivo_pdf)
-            
-        pdf_to_images(f'files/{pdf_name}', output_folder, 'png')
-        
-        english_prompt = gemini_output_TR(prompt)
-
-        # Traducir el texto al español
-        #english_prompt = translator.translate(prompt, src='es', dest='en')
-        
-        st.write(model(english_prompt))
-        shutil.rmtree(files_folder)
-        shutil.rmtree(output_folder)
-        gc.collect()
+# if seleccion == 'Modelo LLM':
+#     if len(prompt) > 10 and documento is not None:
+#         archivo_pdf = documento.read()
+#         if not os.path.exists(files_folder):
+#             os.makedirs(files_folder)
+#         pdf_name = documento.name
+#         # Guardar el archivo PDF en el sistema de archivos local (opcional)
+#         with open(f'files/{pdf_name}', 'wb') as f:
+#             f.write(archivo_pdf)
+#         pdf_to_images(f'files/{pdf_name}', output_folder, 'png')
+#         english_prompt = gemini_output_TR(prompt)
+#         # Traducir el texto al español
+#         #english_prompt = translator.translate(prompt, src='es', dest='en')
+#         st.write(model(english_prompt))
+#         shutil.rmtree(files_folder)
+#         shutil.rmtree(output_folder)
+#         gc.collect()
 
     
     
